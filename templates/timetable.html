@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Timetable{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>My Timetable</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Day/Period</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3 (Break)</th>
+                        <th>4</th>
+                        <th>5 (Break)</th>
+                        <th>6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+                    <tr>
+                        <td>{{ day }}</td>
+                        {% for period in range(1, 7) %}
+                        <td>
+                            {% if period == 3 or period == 5 %}
+                                <span class="timetable-break">BREAK</span>
+                            {% else %}
+                                {% for tt in timetable %}
+                                {% if tt.day == day and tt.period == period %}
+                                {{ tt.course.code }}
+                                {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

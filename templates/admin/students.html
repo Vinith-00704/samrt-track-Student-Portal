@@ -1,0 +1,97 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Students - Admin Panel{% endblock %}
+
+{% block admin_content %}
+<style>
+    .nav-tabs .nav-link {
+        color: #000000 !important;
+    }
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #000000 !important;
+    }
+</style>
+<div class="card">
+    <div class="card-header">
+        <h4>Manage Students</h4>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-tabs mb-4" id="studentTabs" role="tablist">
+            {% for dept in departments %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if loop.first %}active{% endif %}" 
+                        id="{{ dept }}-tab" 
+                        data-bs-toggle="tab" 
+                        data-bs-target="#{{ dept }}" 
+                        type="button" 
+                        role="tab">
+                    {{ dept }}
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content" id="studentTabsContent">
+            {% for dept in departments %}
+            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" 
+                 id="{{ dept }}" 
+                 role="tabpanel">
+                <div class="accordion" id="yearAccordion{{ dept }}">
+                    {% for year in range(1, 5) %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#year{{ year }}{{ dept }}">
+                                Year {{ year }}
+                            </button>
+                        </h2>
+                        <div id="year{{ year }}{{ dept }}" 
+                             class="accordion-collapse collapse" 
+                             data-bs-parent="#yearAccordion{{ dept }}">
+                            <div class="accordion-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Registration No.</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Department</th>
+                                                <th>Section</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for student in students %}
+                                                {% if student.department == dept and student.year == year %}
+                                                <tr>
+                                                    <td>{{ student.registration_number }}</td>
+                                                    <td>{{ student.name }}</td>
+                                                    <td>{{ student.email }}</td>
+                                                    <td>{{ student.department }}</td>
+                                                    <td>{{ student.section }}</td>
+                                                    <td>
+                                                        <a href="{{ url_for('admin_student_courses', student_id=student.id) }}" 
+                                                           class="btn btn-sm btn-primary">
+                                                            Manage Courses
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Welcome to Student Portal</h1>
+            <p class="lead mb-4">Your one-stop solution for managing academic information</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Attendance Tracking</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">View and track your attendance for all courses</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Internal Marks</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Access your internal assessment marks</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Timetable</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">View your weekly class schedule</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if not current_user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-2">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Register</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

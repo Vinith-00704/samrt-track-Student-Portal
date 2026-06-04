@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Welcome, {{ current_user.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <p><strong>Department:</strong> {{ current_user.department }}</p>
+                    <p><strong>Section:</strong> {{ current_user.section }}</p>
+                    <p><strong>Year:</strong> {{ current_user.year }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Your Courses</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Attendance</th>
+                                    <th>IA1</th>
+                                    <th>IA2</th>
+                                    <th>IA3</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sc in student_courses %}
+                                <tr>
+                                    <td>{{ sc.course.code }}</td>
+                                    <td>{{ sc.attendance }}/{{ sc.total_classes }}</td>
+                                    <td>{{ sc.ia1 }}</td>
+                                    <td>{{ sc.ia2 }}</td>
+                                    <td>{{ sc.ia3 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Weekly Timetable</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Period 1</th>
+                                    <th>Period 2</th>
+                                    <th>Period 3</th>
+                                    <th>Period 4</th>
+                                    <th>Period 5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+                                {% for day in days %}
+                                <tr>
+                                    <td>{{ day }}</td>
+                                    {% for period in range(1, 6) %}
+                                    <td>
+                                        {% for tt in timetable %}
+                                            {% if tt.day == day and tt.period == period %}
+                                                {{ tt.course.code }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,146 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Timetable - Admin Panel{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Manage Timetable</h4>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form method="GET" class="form-inline">
+                    <div class="form-group me-2">
+                        <label for="department" class="me-2">Department:</label>
+                        <select class="form-control" id="department" name="department" required onchange="this.form.submit()">
+                            {% for dept in departments %}
+                            <option value="{{ dept }}" {% if dept == selected_dept %}selected{% endif %}>{{ dept }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year" class="me-2">Year:</label>
+                        <select class="form-control" id="year" name="year" required onchange="this.form.submit()">
+                            <option value="1" {% if selected_year == '1' %}selected{% endif %}>1st Year</option>
+                            <option value="2" {% if selected_year == '2' %}selected{% endif %}>2nd Year</option>
+                            <option value="3" {% if selected_year == '3' %}selected{% endif %}>3rd Year</option>
+                            <option value="4" {% if selected_year == '4' %}selected{% endif %}>4th Year</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <form method="POST" class="mb-4">
+            <input type="hidden" name="department" value="{{ selected_dept }}">
+            <input type="hidden" name="year" value="{{ selected_year }}">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="section">Section</label>
+                        <select class="form-control" id="section" name="section" required>
+                            <option value="">Select Section</option>
+                            {% for sec in sections %}
+                            <option value="{{ sec }}">Section {{ sec }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="course">Course</label>
+                        <select class="form-control" id="course" name="course_id" required>
+                            <option value="">Select Course</option>
+                            {% for course in courses %}
+                            <option value="{{ course.id }}">{{ course.code }} - {{ course.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="day">Day</label>
+                        <select class="form-control" id="day" name="day" required>
+                            <option value="">Select Day</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="period">Period</label>
+                        <select class="form-control" id="period" name="period" required>
+                            <option value="">Select Period</option>
+                            <option value="1">Period 1</option>
+                            <option value="2">Period 2</option>
+                            <option value="3">Period 3</option>
+                            <option value="4">Period 4</option>
+                            <option value="5">Period 5</option>
+                            <option value="6">Period 6</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Add Schedule</button>
+        </form>
+
+        <h5>Current Timetable</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Day/Period</th>
+                        <th>Period 1</th>
+                        <th>Period 2</th>
+                        <th>Period 3</th>
+                        <th>Period 4</th>
+                        <th>Period 5</th>
+                        <th>Period 6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+                    <tr>
+                        <td><strong>{{ day }}</strong></td>
+                        {% for period in range(1, 7) %}
+                        <td>
+                            {% for entry in timetable %}
+                                {% if entry.day == day and entry.period == period %}
+                                    <div class="timetable-entry">
+                                        <strong>{{ entry.course.code }}</strong><br>
+                                        {{ entry.course.name }}<br>
+                                        Section {{ entry.section }}
+                                        <form method="POST" action="{{ url_for('delete_timetable_entry') }}" class="d-inline">
+                                            <input type="hidden" name="timetable_id" value="{{ entry.id }}">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.timetable-entry {
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+.timetable-entry button {
+    margin-top: 5px;
+}
+</style>
+{% endblock %} 

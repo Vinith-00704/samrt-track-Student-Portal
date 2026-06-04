@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+
+{% block title %}View All Courses{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        <h4>All Courses in Database</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Department</th>
+                        <th>Year</th>
+                        <th>Credits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.code }}</td>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.department }}</td>
+                        <td>{{ course.year }}</td>
+                        <td>{{ course.credits }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

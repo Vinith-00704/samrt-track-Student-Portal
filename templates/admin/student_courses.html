@@ -1,0 +1,132 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Student Courses - Admin Panel{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Manage Student Course Enrollments</h4>
+    </div>
+    <div class="card-body">
+        {% if selected_student %}
+        <div class="alert alert-info mb-4">
+            <h5>Viewing courses for: {{ selected_student.name }}</h5>
+            <p>Department: {{ selected_student.department }} | Section: {{ selected_student.section }} | Year: {{ selected_student.year }}</p>
+            <a href="{{ url_for('admin_student_courses') }}" class="btn btn-sm btn-secondary">View All Students</a>
+        </div>
+        {% endif %}
+
+        <form method="POST" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="student">Student</label>
+                        <select class="form-control" id="student" name="student_id" required>
+                            <option value="">Select Student</option>
+                            {% for student in students %}
+                            <option value="{{ student.id }}" {% if selected_student and student.id == selected_student.id %}selected{% endif %}>
+                                {{ student.name }} ({{ student.registration_number }}) - {{ student.department }}/{{ student.section }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="course">Course</label>
+                        <select class="form-control" id="course" name="course_id" required>
+                            <option value="">Select Course</option>
+                            {% for course in courses %}
+                            <option value="{{ course.id }}">{{ course.code }} - {{ course.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Enroll Student</button>
+        </form>
+
+        <h5>{% if selected_student %}Current Enrollments for {{ selected_student.name }}{% else %}All Enrollments{% endif %}</h5>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Attendance</th>
+                        <th>IA1</th>
+                        <th>IA2</th>
+                        <th>IA3</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sc in student_courses %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('admin_student_courses', student_id=sc.student.id) }}">
+                                {{ sc.student.name }} ({{ sc.student.registration_number }})
+                            </a>
+                        </td>
+                        <td>{{ sc.course.code }} - {{ sc.course.name }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('update_attendance') }}" class="d-inline">
+                                <input type="hidden" name="student_course_id" value="{{ sc.id }}">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="attendance" class="form-control form-control-sm" 
+                                           value="{{ sc.attendance }}" min="0" max="{{ sc.total_classes }}" required>
+                                    <span class="input-group-text">/</span>
+                                    <input type="number" name="total_classes" class="form-control form-control-sm" 
+                                           value="{{ sc.total_classes }}" min="{{ sc.attendance }}" required>
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('update_marks') }}" class="d-inline">
+                                <input type="hidden" name="student_course_id" value="{{ sc.id }}">
+                                <input type="hidden" name="ia_type" value="ia1">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="marks" class="form-control form-control-sm" 
+                                           value="{{ sc.ia1 }}" min="0" max="100" step="0.01" required>
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('update_marks') }}" class="d-inline">
+                                <input type="hidden" name="student_course_id" value="{{ sc.id }}">
+                                <input type="hidden" name="ia_type" value="ia2">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="marks" class="form-control form-control-sm" 
+                                           value="{{ sc.ia2 }}" min="0" max="100" step="0.01" required>
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('update_marks') }}" class="d-inline">
+                                <input type="hidden" name="student_course_id" value="{{ sc.id }}">
+                                <input type="hidden" name="ia_type" value="ia3">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="marks" class="form-control form-control-sm" 
+                                           value="{{ sc.ia3 }}" min="0" max="100" step="0.01" required>
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('delete_enrollment') }}" class="d-inline" 
+                                  onsubmit="return confirm('Are you sure you want to remove this enrollment?');">
+                                <input type="hidden" name="student_course_id" value="{{ sc.id }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

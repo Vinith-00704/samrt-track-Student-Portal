@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Your Attendance</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <h5>Attendance Policy</h5>
+                        <p>75% attendance is mandatory for all courses. Below you can see your current attendance status and how many more hours you can be absent while maintaining the required attendance percentage.</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Present</th>
+                                    <th>Total Classes</th>
+                                    <th>Absent</th>
+                                    <th>Current %</th>
+                                    <th>Required %</th>
+                                    <th>Remaining Leave Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sc in student_courses %}
+                                <tr>
+                                    <td>{{ sc.course.code }}</td>
+                                    <td>{{ sc.course.name }}</td>
+                                    <td>{{ sc.attendance }}</td>
+                                    <td>{{ sc.total_classes }}</td>
+                                    <td>{{ sc.total_classes - sc.attendance }}</td>
+                                    <td>
+                                        {% if sc.total_classes > 0 %}
+                                            {{ "%.2f"|format((sc.attendance / sc.total_classes) * 100) }}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </td>
+                                    <td>75%</td>
+                                    <td>
+                                        {% if sc.total_classes > 0 %}
+                                            {% set current_percentage = (sc.attendance / sc.total_classes) * 100 %}
+                                            {% if current_percentage >= 75 %}
+                                                {% set required_attendance = (0.75 * sc.total_classes) %}
+                                                {% set remaining_leave = sc.attendance - required_attendance %}
+                                                {{ "%.0f"|format(remaining_leave) }}
+                                            {% else %}
+                                                {% set required_attendance = (0.75 * sc.total_classes) %}
+                                                {% set remaining_leave = sc.attendance - required_attendance %}
+                                                {% if remaining_leave < 0 %}
+                                                    <span class="text-danger">-{{ "%.0f"|format(-remaining_leave) }}</span>
+                                                {% else %}
+                                                    {{ "%.0f"|format(remaining_leave) }}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-warning mt-4">
+                        <h5>Note:</h5>
+                        <ul>
+                            <li>Positive numbers in "Remaining Leave Hours" indicate how many more classes you can miss while maintaining 75% attendance</li>
+                            <li>Negative numbers in "Remaining Leave Hours" indicate how many classes you need to attend to reach 75% attendance</li>
+                            <li>If you see "0" in "Remaining Leave Hours", you are exactly at the 75% attendance mark</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

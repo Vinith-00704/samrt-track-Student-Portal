@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block admin_content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Admin Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">Welcome, {{ current_user.name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Manage Courses</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Add, edit, or remove courses.</p>
+                    <a href="{{ url_for('admin_courses') }}" class="btn btn-primary">Manage Courses</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Manage Students</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">View and manage student information.</p>
+                    <a href="{{ url_for('admin_students') }}" class="btn btn-primary">Manage Students</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Student Courses</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Manage student course enrollments.</p>
+                    <a href="{{ url_for('admin_student_courses') }}" class="btn btn-primary">Manage Enrollments</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Student Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">Admin Menu</h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="/admin/students" 
+                       class="list-group-item list-group-item-action {% if request.path == '/admin/students' %}active bg-primary{% endif %}">
+                        <i class="fas fa-users me-2"></i>Manage Students
+                    </a>
+                    <a href="/admin/courses" 
+                       class="list-group-item list-group-item-action {% if request.path == '/admin/courses' %}active bg-primary{% endif %}">
+                        <i class="fas fa-book me-2"></i>Manage Courses
+                    </a>
+                    <a href="/admin/timetable" 
+                       class="list-group-item list-group-item-action {% if request.path == '/admin/timetable' %}active bg-primary{% endif %}">
+                        <i class="fas fa-calendar-alt me-2"></i>Manage Timetable
+                    </a>
+                    <a href="/admin/student-courses" 
+                       class="list-group-item list-group-item-action {% if request.path == '/admin/student-courses' %}active bg-primary{% endif %}">
+                        <i class="fas fa-user-graduate me-2"></i>Manage Student Courses
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        {% block admin_content %}{% endblock %}
+    </div>
+    </div>
+</div>
+<style>
+    .list-group-item {
+        color: #000000;
+        border: 1px solid rgba(0,0,0,.125);
+        padding: 12px 20px;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+        color: #3498db;
+        text-decoration: none;
+    }
+    
+    .list-group-item.active {
+        background-color: #3498db !important;
+        border-color: #3498db !important;
+        color: #ffffff !important;
+    }
+
+    .list-group-item-action {
+        cursor: pointer;
+    }
+
+    .list-group-item-action:active {
+        background-color: #3498db !important;
+        color: #ffffff !important;
+    }
+</style>
+{% endblock %} 

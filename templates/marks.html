@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Marks{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Your Internal Assessment Marks</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>IA1</th>
+                                    <th>IA2</th>
+                                    <th>IA3</th>
+                                    <th>Average</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sc in student_courses %}
+                                <tr>
+                                    <td>{{ sc.course.code }}</td>
+                                    <td>{{ sc.course.name }}</td>
+                                    <td>{{ sc.ia1 }}</td>
+                                    <td>{{ sc.ia2 }}</td>
+                                    <td>{{ sc.ia3 }}</td>
+                                    <td>
+                                        {% set total = sc.ia1 + sc.ia2 + sc.ia3 %}
+                                        {% set count = 3 %}
+                                        {% if sc.ia1 == 0 %}{% set count = count - 1 %}{% endif %}
+                                        {% if sc.ia2 == 0 %}{% set count = count - 1 %}{% endif %}
+                                        {% if sc.ia3 == 0 %}{% set count = count - 1 %}{% endif %}
+                                        {% if count > 0 %}
+                                            {{ "%.2f"|format(total / count) }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
